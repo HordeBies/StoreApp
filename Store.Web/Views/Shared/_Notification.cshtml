@@ -1,0 +1,16 @@
+﻿@if (TempData.TryGetValue("success", out var successValue))
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.success('@successValue');
+    </script>
+}
+@if (TempData.TryGetValue("error", out var errorValue))
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.error('@errorValue');
+    </script>
+}
