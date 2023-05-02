@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Store.DataAccess.Data;
+using Store.DataAccess.RepositoryContracts;
+using Store.Models;
 
-namespace Store.Models.Controllers
+namespace Store.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this.db = db;
+            this.unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> Index()
         {
-            var model = await db.Categories.ToListAsync();
+            var model = await unitOfWork.Category.GetAll();
             return View(model);
         }
         public async Task<IActionResult> Create()
@@ -25,8 +26,8 @@ namespace Store.Models.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Categories.Add(category);
-                await db.SaveChangesAsync();
+                unitOfWork.Category.Add(category);
+                await unitOfWork.SaveAsync();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction(nameof(Index));
             }
@@ -39,7 +40,7 @@ namespace Store.Models.Controllers
             {
                 return NotFound();
             }
-            var category = await db.Categories.FirstOrDefaultAsync(r => r.Id == id);
+            var category = await unitOfWork.Category.GetFirstOrDefault(r => r.Id == id);
             return View(category);
         }
         [HttpPost]
@@ -47,8 +48,8 @@ namespace Store.Models.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Categories.Update(category);
-                await db.SaveChangesAsync();
+                unitOfWork.Category.Update(category);
+                await unitOfWork.SaveAsync();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction(nameof(Index));
             }
@@ -61,17 +62,17 @@ namespace Store.Models.Controllers
             {
                 return NotFound();
             }
-            var category = await db.Categories.FirstOrDefaultAsync(r => r.Id == id);
+            var category = await unitOfWork.Category.GetFirstOrDefault(r => r.Id == id);
             return View(category);
         }
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeletePOST(int? id)
         {
-            var category = await db.Categories.FirstOrDefaultAsync(r => r.Id == id);
+            var category = await unitOfWork.Category.GetFirstOrDefault(r => r.Id == id);
             if (category == null)
                 return NotFound();
-            db.Categories.Remove(category);
-            await db.SaveChangesAsync();
+            unitOfWork.Category.Remove(category);
+            await unitOfWork.SaveAsync();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction(nameof(Index));
         }

@@ -2,8 +2,9 @@
 using Store.Models;
 using System.Diagnostics;
 
-namespace Store.Models.Controllers
+namespace Store.Web.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
