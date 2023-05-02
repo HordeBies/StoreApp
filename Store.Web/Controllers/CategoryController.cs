@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Store.Web.Data;
-using Store.Web.Models;
+using Store.DataAccess.Data;
 
-namespace Store.Web.Controllers
+namespace Store.Models.Controllers
 {
     public class CategoryController : Controller
     {
