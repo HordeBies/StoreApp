@@ -12,10 +12,12 @@ namespace Store.DataAccess.Repositories
     {
         private readonly ApplicationDbContext db;
         public ICategoryRepository Category { get; private set; }
-        public UnitOfWork(ApplicationDbContext db, ICategoryRepository categoryRepository)
+        public IProductRepository Product { get; private set; }
+        public UnitOfWork(ApplicationDbContext db, ICategoryRepository categoryRepository, IProductRepository productRepository)
         {
             this.db = db;
             this.Category = categoryRepository;
+            this.Product = productRepository;
         }
         public async Task SaveAsync()
         {

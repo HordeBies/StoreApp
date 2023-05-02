@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Category>
 
-<div class="card shadow border-0 mt-4">
+<div class="card shadow border-0 my-4">
     <div class="card-header bg-dark bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
@@ -28,10 +28,10 @@
                     <tr>
                         <td>@item.Name</td>
                         <td>@item.DisplayOrder</td>
-                        <td>
-                            <div class="w-100 btn-group" role="group">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-outline-dark text-white mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
+                        <td class="p-0">
+                            <div class="w-100 pt-2 btn-group" role="group">
+                                <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-outline-dark text-white mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
                             </div>
                         </td>
                     </tr>

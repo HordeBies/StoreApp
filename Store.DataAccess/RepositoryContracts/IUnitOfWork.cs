@@ -9,7 +9,7 @@ namespace Store.DataAccess.RepositoryContracts
     public interface IUnitOfWork
     {
         ICategoryRepository Category { get; }
-
+        IProductRepository Product { get; }
         Task SaveAsync();
 
     }

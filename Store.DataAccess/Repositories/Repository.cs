@@ -25,14 +25,31 @@ namespace Store.DataAccess.Repositories
             dbSet.Add(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAll(string? includeProperties = null) // Comma separated, Case Sensitive (e.g. "Category,Product") include properties
         {
-            return await dbSet.ToListAsync();
+            IQueryable<T> dbSetQuery = dbSet;
+            if(!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach(var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    dbSetQuery = dbSetQuery.Include(includeProperty);
+                }
+            }
+            return await dbSetQuery.ToListAsync();
         }
 
-        public async Task<T?> GetFirstOrDefault(Expression<Func<T, bool>> query)
+        public async Task<T?> GetFirstOrDefault(Expression<Func<T, bool>> query, string? includeProperties = null)
         {
-            return await dbSet.FirstOrDefaultAsync(query);
+
+            IQueryable<T> dbSetQuery = dbSet;
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    dbSetQuery = dbSetQuery.Include(includeProperty);
+                }
+            }
+            return await dbSetQuery.FirstOrDefaultAsync(query);
         }
 
         public void Remove(T entity)
