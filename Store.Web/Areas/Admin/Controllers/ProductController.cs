@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
+using Store.Utility;
 using Store.Web.Areas.Admin.Models;
 
 namespace Store.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Role.Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
