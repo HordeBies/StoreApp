@@ -1,81 +1,113 @@
 ﻿@model Product
-<form method="post">
-    <div class="card shadow border-0 mt-4">
-        <div class="card-header bg-dark bg-gradient text-light py-4">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">@Model.Title</h3>
-                    <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+<div class="row ">
+    <div class="col-2">
+    </div>
+    <form class="col-8" method="post">
+        <div class="card shadow border-0 mt-4">
+            <div class="card-header bg-dark bg-gradient text-light py-4">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="text-white text-uppercase">@Model.Title</h3>
+                        <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="py-3">
-                <div class="row">
-                    <div class="col-6 col-md-2 offset-lg-1 pb-1">
-                        <a asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
-                            <small>Back to home</small>
-                        </a>
+            <div class="card-body">
+                <div class="py-3">
+                    <div class="row">
+                        <div class="col-6 col-md-2 offset-lg-1 pb-1">
+                            <a asp-action="Index" class="btn btn-outline-primary bg-gradient mb-3 fw-semibold btn-sm text-uppercase">
+                                <small>Back to home</small>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        <img src="@Model.ImageURL" width="100%" class="rounded" />
-                    </div>
-                    <div class="col-12 col-lg-6 offset-lg-1">
+                    <div class="row">
+                        <div class="col-12 col-lg-5 offset-lg-1 text-center mb-3">
+                            <img src="@Model.ImageURL" width="100%" class="rounded" />
+                        </div>
+                        <div class="col-12 col-lg-5 offset-lg-1">
 
-                        <div class="col-12 col-md-6 pb-4">
-                            <span class="badge rounded-pill bg-warning">@Model.Category.Name</span>
-                        </div>
-                        <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50 ">ISBN : @Model.ISBN</h6>
-                        </div>
-                        <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50  pb-2">
-                                List Price:
-                                <span class="text-decoration-line-through">
-                                    @*@Model.ListPrice.ToString("c")*@ PlaceHolder
-                                </span>
-                            </h6>
-                        </div>
-                        <div class="row text-center ps-2">
-                            <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
-                                <div class="text-dark text-opacity-50 fw-semibold">Price</div>
+                            <div class="col-12 col-md-6 pb-4">
+                                <span class="badge rounded-pill bg-warning">@Model.Category.Name</span>
                             </div>
-                        </div>
-                        <div class="row text-center ps-2">
-                            <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                @*<div>@Model.Price.ToString("c")</div> TODO: Handle this*@ PlaceHolder
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50 ">ISBN : @Model.ISBN</h6>
                             </div>
-                        </div>
-                        <div class="row pl-2 my-3">
-                            <p class="text-secondary lh-sm">@Html.Raw(Model.Description)</p>
-                        </div>
-                        <div class="row pl-2 mb-3">
-                            <div class="col-md-4">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold"
-                                          id="inputGroup-sizing-default">
-                                        Count
-                                    </span>
-                                    <input type="number" value="1" class="form-control text-end"
-                                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-
+                            @if (ViewBag.SelectedCompanyProduct != null)
+                            {
+                                <div class="row ps-2">
+                                    <h6 class="text-dark text-opacity-50  pb-2">
+                                        List Price:
+                                        <span class="text-decoration-line-through">
+                                            @ViewBag.SelectedCompanyProduct?.ListPrice.ToString("c")
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="row text-center ps-2">
+                                    <div class="p-1 col-3 col-lg-6 bg-white border-bottom">
+                                        <div class="text-dark text-opacity-50 fw-semibold">Price</div>
+                                    </div>
+                                </div>
+                                <div class="row text-center ps-2">
+                                    <div class="p-1 col-3 col-lg-6 mb-3 bg-white text-warning fw-bold">
+                                        <div>@ViewBag.SelectedCompanyProduct?.Price.ToString("c")</div>
+                                    </div>
+                                </div>
+                                <div class="row pl-2 mb-3">
+                                    <div class="col-md-7">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                                                  id="inputGroup-sizing-default">
+                                                Count
+                                            </span>
+                                            <input type="number" value="1" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="row pl-2 my-3">
+                                <p class="text-secondary lh-sm">@Html.Raw(Model.Description)</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6 pb-1">
+                                    <button type="submit" disabled
+                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                                        Add to Cart (Comming Soon...)
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 col-md-6 pb-1">
-                                <button type="submit" disabled
-                                        class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
-                                    Add to Cart (Comming Soon...)
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
+    </form>
+    <div class="col-2">
+        @if (ViewBag.SelectedCompanyProduct != null)
+        {
+            int companyId = ViewBag.SelectedCompanyProduct.CompanyId;
+            var selectedCompany = Model.Companies.FirstOrDefault(r => r.Id == companyId);
+            <div class="card bg-secondary mb-3 mt-5" style="max-width: 20rem;">
+                <div class="card-header">Seller</div>
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-shop"></i> @selectedCompany.Name</h5>
+                </div>
+            </div>
+
+            <div class="card bg-secondary mt-5" style="max-width: 20rem;">
+                <div class="card-header">Other Sellers</div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var company in Model.Companies)
+                    {
+                        if(company.Id == companyId)
+                        {
+                            continue;
+                        }
+                        <li class="list-group-item"><a style="text-decoration:none" asp-action="details" asp-route-id="@Model.Id" asp-route-companyId="@company.Id"><i class="bi bi-shop"></i> @company.Name <br /> @Model.CompanyProducts.FirstOrDefault(cp => cp.CompanyId == company.Id)?.Price.ToString("c")</a> </li>
+                    }
+                </ul>
+            </div>
+        }
     </div>
-</form>
+</div>

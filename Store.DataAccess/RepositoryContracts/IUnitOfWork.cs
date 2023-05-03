@@ -11,6 +11,7 @@ namespace Store.DataAccess.RepositoryContracts
         ICategoryRepository Category { get; }
         IProductRepository Product { get; }
         ICompanyRepository Company { get; }
+        ICompanyProductRepository CompanyProduct { get; }
 
         Task SaveAsync();
 

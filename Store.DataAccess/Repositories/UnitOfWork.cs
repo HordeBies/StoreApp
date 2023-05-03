@@ -13,13 +13,15 @@ namespace Store.DataAccess.Repositories
         private readonly ApplicationDbContext db;
         public ICategoryRepository Category { get; private set; }
         public IProductRepository Product { get; private set; }
-        public ICompanyRepository Company { get; set; }
+        public ICompanyRepository Company { get; private set; }
+        public ICompanyProductRepository CompanyProduct { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             this.db = db;
             this.Category = new CategoryRepository(db);
             this.Product = new ProductRepository(db);
             this.Company = new CompanyRepository(db);
+            this.CompanyProduct = new CompanyProductRepository(db);
         }
         public async Task SaveAsync()
         {

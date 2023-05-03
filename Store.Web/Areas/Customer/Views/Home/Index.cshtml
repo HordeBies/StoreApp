@@ -3,6 +3,7 @@
 <div class="row pb-3">
     @foreach (var product in Model)
     {
+        var minCP = product.CompanyProducts.MinBy(r => r.Price);
         <div class="col-lg-3 colsm-6">
             <div class="row p-2">
                 <div class="col-12 p-1">
@@ -16,12 +17,12 @@
                                 </div>
                                 <div class="pl-1">
                                     <p class="text-dark opacity-75 text-center">
-                                        <span>@product.CompanyProducts.MinBy(r => r.Price)?.Price.ToString("c")</span> <span class="text-decoration-line-through text-danger">@product.CompanyProducts.MinBy(r => r.ListPrice)?.ListPrice.ToString("c")</span>
+                                        <span>@minCP?.Price.ToString("c")</span> <span class="text-decoration-line-through text-danger">@minCP?.ListPrice.ToString("c")</span>
                                     </p>
                                 </div>
                             </div>
                         </a>
-                        <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-sm btn-primary bg-gradient border-0 shadow-none form-control">Details</a>
+                        <a asp-action="Details" asp-route-id="@product.Id" asp-route-companyId="@minCP?.CompanyId" class="btn btn-sm btn-primary bg-gradient border-0 shadow-none form-control">Details</a>
                     </div>
                 </div>
             </div>

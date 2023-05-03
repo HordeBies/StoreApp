@@ -33,6 +33,20 @@ namespace Store.DataAccess.Data
                 new Company{ Id = 2, Name = "Jabbercube", StreetAddress= "592 Porter Way", City = "Salamina", PostalCode = "477047", PhoneNumber = "725-831-6046"},
                 new Company{ Id = 3, Name = "Skynoodle", StreetAddress= "73428 Kipling Junction", City = "Sankoutang", PostalCode = "1237", PhoneNumber = "251-502-3387"},
             });
+            modelBuilder.Entity<CompanyProduct>().HasData(new CompanyProduct[]
+            {
+                new CompanyProduct{CompanyId = 1, ProductId = 2, ListPrice = 50, Price = 45},
+                new CompanyProduct{CompanyId = 2, ProductId = 2, ListPrice = 60, Price = 55},
+                new CompanyProduct{CompanyId = 3, ProductId = 2, ListPrice = 65, Price = 60},
+
+                new CompanyProduct{CompanyId = 1, ProductId = 1, ListPrice = 100, Price = 90},
+                new CompanyProduct{CompanyId = 2, ProductId = 1, ListPrice = 110, Price = 100},
+                new CompanyProduct{CompanyId = 3, ProductId = 1, ListPrice = 115, Price = 105},
+
+                new CompanyProduct{CompanyId = 1, ProductId = 3, ListPrice = 70, Price = 60},
+                new CompanyProduct{CompanyId = 2, ProductId = 3, ListPrice = 80, Price = 70},
+                new CompanyProduct{CompanyId = 3, ProductId = 3, ListPrice = 85, Price = 75},
+            });
 
             modelBuilder.Entity<CompanyProduct>().HasKey(cp => new { cp.CompanyId, cp.ProductId });
             modelBuilder.Entity<Product>() // To use external table for many-to-many relationship and not create a new table for skip navigation

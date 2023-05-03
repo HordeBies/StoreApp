@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.Models
@@ -16,8 +17,10 @@ namespace Store.Models
         public double ListPrice { get; set; }
 
         [ForeignKey(nameof(CompanyId))]
+        [ValidateNever]
         public Company Company { get; set; }
         [ForeignKey(nameof (ProductId))]
+        [ValidateNever]
         public Product Product { get; set; }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.DataAccess.RepositoryContracts;
-using Store.Models;
 using Store.Utility;
-using Store.Web.Areas.Admin.Models;
 
 namespace Store.Web.Areas.Admin.Controllers
 {
@@ -23,11 +20,11 @@ namespace Store.Web.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Upsert(int? id)
         {
-            Company model = await unitOfWork.Company.GetFirstOrDefault(r => r.Id == id) ?? new Company();
+            var model = await unitOfWork.Company.GetFirstOrDefault(r => r.Id == id) ?? new ();
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Upsert(Company model)
+        public async Task<IActionResult> Upsert(Store.Models.Company model)
         {
             if (ModelState.IsValid)
             {
@@ -52,7 +49,7 @@ namespace Store.Web.Areas.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(Company model)
+        public async Task<IActionResult> Edit(Store.Models.Company model)
         {
             if (ModelState.IsValid)
             {
