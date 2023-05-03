@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.DataAccess.RepositoryContracts;
 using Store.Models;
 using System.Diagnostics;
 
@@ -8,15 +9,23 @@ namespace Store.Web.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            this.unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var productList = await unitOfWork.Product.GetAll(includeProperties: "Category");
+            return View(productList);
+        }        
+        public async Task<IActionResult> Details(int? id)
+        {
+            var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id,includeProperties: "Category");
+            return View(product);
         }
 
         public IActionResult Privacy()
