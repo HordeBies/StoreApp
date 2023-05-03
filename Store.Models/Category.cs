@@ -14,10 +14,5 @@ namespace Store.Models
         [DisplayName("Display Order")]
         [Range(1,100)]
         public int DisplayOrder { get; set; }
-        //public int? ParentId { get; set; }
-        //[ForeignKey("ParentId")]
-        //public Category? Parent { get; set; }
-        //public ICollection<Category>? Children { get; set; }
-
     }
 }

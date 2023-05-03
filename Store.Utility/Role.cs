@@ -10,7 +10,7 @@ namespace Store.Utility
     {
         public const string Customer = "Customer";
         public const string Affiliate = "Affiliate";
-        public const string Company = "Customer";
+        public const string Company = "Company";
         public const string Admin = "Admin";
 
     }

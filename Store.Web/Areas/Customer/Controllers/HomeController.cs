@@ -19,12 +19,12 @@ namespace Store.Web.Areas.Customer.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var productList = await unitOfWork.Product.GetAll(includeProperties: "Category");
+            var productList = await unitOfWork.Product.GetAll(includeProperties: "Category,CompanyProducts");
             return View(productList);
         }        
         public async Task<IActionResult> Details(int? id)
         {
-            var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id,includeProperties: "Category");
+            var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id,includeProperties: "Category,CompanyProducts");
             return View(product);
         }
 

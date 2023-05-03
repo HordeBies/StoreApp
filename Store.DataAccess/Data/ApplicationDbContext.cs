@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Store.Models;
 
 namespace Store.DataAccess.Data
@@ -11,6 +12,8 @@ namespace Store.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanyProduct> CompanyProducts { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers {get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,6 +27,19 @@ namespace Store.DataAccess.Data
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 },
             });
 
+            modelBuilder.Entity<Company>().HasData(new Company[]
+            {
+                new Company{ Id = 1, Name = "Tagtune", StreetAddress= "5 Erie Court", City = "Floriano", PostalCode = "64800-000", PhoneNumber = "362-555-3461"},
+                new Company{ Id = 2, Name = "Jabbercube", StreetAddress= "592 Porter Way", City = "Salamina", PostalCode = "477047", PhoneNumber = "725-831-6046"},
+                new Company{ Id = 3, Name = "Skynoodle", StreetAddress= "73428 Kipling Junction", City = "Sankoutang", PostalCode = "1237", PhoneNumber = "251-502-3387"},
+            });
+
+            modelBuilder.Entity<CompanyProduct>().HasKey(cp => new { cp.CompanyId, cp.ProductId });
+            modelBuilder.Entity<Product>() // To use external table for many-to-many relationship and not create a new table for skip navigation
+            .HasMany(e => e.Companies)
+            .WithMany(e => e.Products)
+            .UsingEntity<CompanyProduct>();
+
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {
@@ -32,8 +48,6 @@ namespace Store.DataAccess.Data
                     Author = "Billy Spark",
                     Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                     ISBN = "SWD9999001",
-                    ListPrice = 99,
-                    Price = 90,
                     CategoryID = 1,
                     ImageURL = "",
                 },
@@ -44,8 +58,6 @@ namespace Store.DataAccess.Data
                     Author = "Nancy Hoover",
                     Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                     ISBN = "CAW777777701",
-                    ListPrice = 40,
-                    Price = 30,
                     CategoryID = 2,
                     ImageURL = "",
                 },
@@ -56,8 +68,6 @@ namespace Store.DataAccess.Data
                     Author = "Julian Button",
                     Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                     ISBN = "RITO5555501",
-                    ListPrice = 55,
-                    Price = 50,
                     CategoryID = 3,
                     ImageURL = "",
                 },
@@ -68,8 +78,6 @@ namespace Store.DataAccess.Data
                     Author = "Abby Muscles",
                     Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                     ISBN = "WS3333333301",
-                    ListPrice = 70,
-                    Price = 65,
                     CategoryID = 2,
                     ImageURL = "",
                 },
@@ -80,8 +88,6 @@ namespace Store.DataAccess.Data
                     Author = "Ron Parker",
                     Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                     ISBN = "SOTJ1111111101",
-                    ListPrice = 30,
-                    Price = 27,
                     CategoryID = 3,
                     ImageURL = "",
                 },
@@ -92,8 +98,6 @@ namespace Store.DataAccess.Data
                     Author = "Laura Phantom",
                     Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
                     ISBN = "FOT000000001",
-                    ListPrice = 25,
-                    Price = 23,
                     CategoryID = 1,
                     ImageURL = "",
                 }

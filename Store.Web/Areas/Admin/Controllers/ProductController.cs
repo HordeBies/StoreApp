@@ -58,7 +58,7 @@ namespace Store.Web.Areas.Admin.Controllers
                 else
                     unitOfWork.Product.Update(model.Product);
                 await unitOfWork.SaveAsync();
-                TempData["success"] = "Product created successfully";
+                TempData["success"] = $"Product {(model.Product.Id == 0 ? "Created" : "Updated")} successfully";
                 return RedirectToAction(nameof(Index));
             }
             model.CategoryList = (await unitOfWork.Category.GetAll()).Select(c => new SelectListItem{Text = c.Name, Value = c.Id.ToString()});

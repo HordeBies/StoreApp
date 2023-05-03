@@ -24,8 +24,6 @@ namespace Store.DataAccess.Repositories
                 objFromDb.Description = product.Description;
                 objFromDb.ISBN = product.ISBN;
                 objFromDb.Author = product.Author;
-                objFromDb.ListPrice = product.ListPrice;
-                objFromDb.Price = product.Price;
                 objFromDb.CategoryID = product.CategoryID;
                 if (product.ImageURL != null)
                 {

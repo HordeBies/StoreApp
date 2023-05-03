@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Store.DataAccess.RepositoryContracts;
 using Store.Models;
 using Store.Utility;
 
@@ -34,14 +35,15 @@ namespace Store.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly IUnitOfWork _unitOfWork;
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +52,7 @@ namespace Store.Web.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -108,7 +111,8 @@ namespace Store.Web.Areas.Identity.Pages.Account
             public string? Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
-
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
             [Required]
             public string FullName { get; set; }
             public string? StreetAddress { get; set; }
@@ -116,6 +120,7 @@ namespace Store.Web.Areas.Identity.Pages.Account
             public string? PostalCode { get; set; }
             [Phone]
             public string? PhoneNumber { get; set; }
+            public int? CompanyId { get; set; }
         }
 
 
@@ -141,7 +146,8 @@ namespace Store.Web.Areas.Identity.Pages.Account
 
             Input = new()
             {
-                RoleList = _roleManager.Roles.Select(r => new SelectListItem { Text = r.Name, Value = r.Name })
+                RoleList = _roleManager.Roles.Select(r => new SelectListItem { Text = r.Name, Value = r.Name }),
+                CompanyList = (await _unitOfWork.Company.GetAll()).Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
             };
 
             ReturnUrl = returnUrl;
@@ -163,6 +169,9 @@ namespace Store.Web.Areas.Identity.Pages.Account
                 user.StreetAddress = Input.StreetAddress;
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
+                if(Input.Role == Role.Company)
+                    user.CompanyId = Input.CompanyId;
+
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

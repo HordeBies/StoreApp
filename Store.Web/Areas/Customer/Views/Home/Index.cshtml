@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="pl-1">
                                     <p class="text-dark opacity-75 text-center">
-                                        <span>@product.Price.ToString("c")</span> <span class="text-decoration-line-through text-danger">@product.ListPrice.ToString("c")</span>
+                                        <span>@product.CompanyProducts.MinBy(r => r.Price)?.Price.ToString("c")</span> <span class="text-decoration-line-through text-danger">@product.CompanyProducts.MinBy(r => r.ListPrice)?.ListPrice.ToString("c")</span>
                                     </p>
                                 </div>
                             </div>

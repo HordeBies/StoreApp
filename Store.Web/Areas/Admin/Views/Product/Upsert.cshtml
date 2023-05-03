@@ -46,7 +46,7 @@
                             <input type="file" name="imageFile" id="imageFile" class="form-control border-0 shadow" />
                             <label for="imageFile" class="ms-2">Cover Image</label>
                         </div>
-                        <div class="row">
+                        @*<div class="row">
                             <div class="form-floating py-2 col-6">
                                 <input asp-for="Product.Price" class="form-control border-0 shadow" />
                                 <label asp-for="Product.Price" class="ms-2"></label>
@@ -57,7 +57,7 @@
                                 <label asp-for="Product.ListPrice" class="ms-2"></label>
                                 <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="row text-center mt-3">
                             <div class="col-6 col-md-3">
                                 @if (Model.Product.Id == 0)
