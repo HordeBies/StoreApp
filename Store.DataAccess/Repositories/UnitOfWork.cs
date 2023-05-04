@@ -17,6 +17,8 @@ namespace Store.DataAccess.Repositories
         public ICompanyProductRepository CompanyProduct { get; private set; }
         public IShoppingCartRepository ShoppingCart { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IOrderHeaderRepository OrderHeader { get; private set; }
+        public IOrderDetailRepository OrderDetail { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             this.db = db;
@@ -26,6 +28,8 @@ namespace Store.DataAccess.Repositories
             this.CompanyProduct = new CompanyProductRepository(db);
             this.ShoppingCart = new ShoppingCartRepository(db);
             this.ApplicationUser = new ApplicationUserRepository(db);
+            this.OrderHeader = new OrderHeaderRepository(db);
+            this.OrderDetail = new OrderDetailRepository(db);
         }
         public async Task SaveAsync()
         {

@@ -33,23 +33,28 @@
                                         <div class="d-none d-lg-block col-lg-1 text-center py-2">
                                             <img src="@shoppingCartItem.Product.ImageURL" class="rounded" width="100%" />
                                         </div>
-                                        <div class="col-12 col-lg-6 pt-md-3">
+                                        <div class="col-12 col-lg-5 pt-md-3">
                                             <h5 class="text-uppercase text-secondary"><strong>@shoppingCartItem.Product.Title</strong></h5>
                                             @*<p><small>@Html.Raw(shoppingCartItem.Product.Description)</small></p>*@
+                                            <p><small>Unit Price: @shoppingCartItem.Price.ToString("c")</small></p>
+                                            
                                         </div>
-                                        <div class="col-12  col-lg-5 text-center row">
-                                                <div class="col-3 text-md-right pt-2 pt-md-4">
-                                                <h6 class="fw-semibold">
-                                                        @shoppingCartItem.UnitPrice.ToString("c")<span class="text-muted">&nbsp;x&nbsp;</span>@shoppingCartItem.Count
-                                                </h6>
+                                        <div class="col-12  col-lg-6 text-center row">
+                                                <div class="col-4 text-md-right pt-2 pt-md-4">
+                                                <h5 class="fw-bold text-warning">
+                                                        @((shoppingCartItem.Price*shoppingCartItem.Count).ToString("c"))
+                                                </h5>
                                             </div>
-                                                <div class="col-6 col-sm-4 col-lg-6 pt-2">
+                                                <div class="col-5 col-sm-4 col-lg-5 pt-2">
                                                     <div class="w-75 btn-group" role="group">
-                                                        <a asp-action="plus" asp-route-cartId="@shoppingCartItem.Id" class="btn btn-outline-primary bg-gradient py-2" style="font-size: 25px;">
-                                                            +
-                                                        </a> &nbsp;
-                                                        <a asp-action="minus" asp-route-cartId="@shoppingCartItem.Id" class="btn btn-outline-primary bg-gradient py-2" style="font-size: 25px;">
+                                                        <a asp-action="minus" asp-route-cartId="@shoppingCartItem.Id" class="btn btn-outline-dark bg-gradient py-2" style="font-size: 25px;">
                                                             -
+                                                        </a>
+                                                        <div class="align-self-center">
+                                                            <span class="p-2 fw-bold">@shoppingCartItem.Count</span>
+                                                        </div>
+                                                        <a asp-action="plus" asp-route-cartId="@shoppingCartItem.Id" class="btn btn-outline-dark bg-gradient py-2" style="font-size: 25px;">
+                                                            +
                                                         </a>
                                                     </div>
 
@@ -76,14 +81,20 @@
                         <ul class="list-group mb-4">
                             <li class="d-flex justify-content-between align-items-center">
                                 <h5 class="text-dark fw-semibold text-uppercase"> Total (USD)</h5>
-                                <h4 class="text-dark fw-bolder">@Model.OrderTotal.ToString("c")</h4>
+                                <h4 class="text-dark fw-bolder">@Model.OrderHeader.OrderTotal.ToString("c")</h4>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2 offset-md-5">
+                        @if(Model.ShoppingCartList.Count() > 0)
+                        {
                         <a asp-action="Summary" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
+                        }else
+                        {
+                        <a asp-area="customer" asp-controller="home" asp-action="index" class="btn btn-primary border-0 bg-gradient w-100 py-2" >Start Shopping</a>
+                        }
                     </div>
                 </div>
             </div>

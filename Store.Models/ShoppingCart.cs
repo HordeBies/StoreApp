@@ -31,9 +31,10 @@ namespace Store.Models
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
 
+        [ForeignKey($"{nameof(CompanyId)},{nameof(ProductId)}")]
+        [ValidateNever]
+        public CompanyProduct CompanyProduct { get; set; }
         [NotMapped]
-        public double UnitPrice{ get; set; }
-        [NotMapped]
-        public double TotalPrice { get; set;}
+        public double Price{ get; set; }
     }
 }
