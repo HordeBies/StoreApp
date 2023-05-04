@@ -20,6 +20,7 @@ namespace Store.DataAccess.Repositories
             if (objFromDb != null)
             {
                 objFromDb.Price = obj.Price;
+                objFromDb.ListPrice = obj.ListPrice;
                 db.CompanyProducts.Update(objFromDb);
             }
         }

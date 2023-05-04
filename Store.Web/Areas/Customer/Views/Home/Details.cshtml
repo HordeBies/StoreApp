@@ -1,14 +1,17 @@
-﻿@model Product
+﻿@using Microsoft.AspNetCore.Identity;
+@model ShoppingCart
 <div class="row ">
     <div class="col-2">
     </div>
     <form class="col-8" method="post">
+        <input asp-for="ProductId" hidden/>
+        <input asp-for="CompanyId" hidden />
         <div class="card shadow border-0 mt-4">
             <div class="card-header bg-dark bg-gradient text-light py-4">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h3 class="text-white text-uppercase">@Model.Title</h3>
-                        <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                        <h3 class="text-white text-uppercase">@Model.Product.Title</h3>
+                        <p class="text-white-50 fw-semibold mb-0">by @Model.Product.Author</p>
                     </div>
                 </div>
             </div>
@@ -23,15 +26,15 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-5 offset-lg-1 text-center mb-3">
-                            <img src="@Model.ImageURL" width="100%" class="rounded" />
+                            <img src="@Model.Product.ImageURL" width="100%" class="rounded" />
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
 
                             <div class="col-12 col-md-6 pb-4">
-                                <span class="badge rounded-pill bg-warning">@Model.Category.Name</span>
+                                <span class="badge rounded-pill bg-warning">@Model.Product.Category.Name</span>
                             </div>
                             <div class="row ps-2">
-                                <h6 class="text-dark text-opacity-50 ">ISBN : @Model.ISBN</h6>
+                                <h6 class="text-dark text-opacity-50 ">ISBN : @Model.Product.ISBN</h6>
                             </div>
                             @if (ViewBag.SelectedCompanyProduct != null)
                             {
@@ -60,20 +63,31 @@
                                                   id="inputGroup-sizing-default">
                                                 Count
                                             </span>
-                                            <input type="number" value="1" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                                            <input asp-for="Count" type="number" value="1" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                                         </div>
                                     </div>
                                 </div>
                             }
                             <div class="row pl-2 my-3">
-                                <p class="text-secondary lh-sm">@Html.Raw(Model.Description)</p>
+                                <p class="text-secondary lh-sm">@Html.Raw(Model.Product.Description)</p>
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 pb-1">
-                                    <button type="submit" disabled
-                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
-                                        Add to Cart (Comming Soon...)
-                                    </button>
+                                    @if (ViewBag.SelectedCompanyProduct != null)
+                                    {
+                                        <button type="submit"
+                                                class="btn btn-dark bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                                            Add to Cart
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit"
+                                                class="btn btn-dark bg-gradient  w-100 py-2 text-uppercase fw-semibold disabled">
+                                            Not Available
+                                        </button>
+                                    }
+
                                 </div>
                             </div>
                         </div>
@@ -84,28 +98,57 @@
         </div>
     </form>
     <div class="col-2">
+        @if (User.IsInRole(Store.Utility.Role.Company))
+        {
+            @inject UserManager<IdentityUser> UserManager;
+            var user = await UserManager.GetUserAsync(User) as ApplicationUser;
+            int? userCompanyId = user?.CompanyId;
+            var userCompany = user?.Company;
+            var userCompanyProduct = Model.Product.CompanyProducts.FirstOrDefault(r => r.CompanyId == userCompanyId);
+            <div class="card bg-secondary border-success mt-5" style="max-width: 20rem;">
+                <div class="card-header fw-bold">Company Panel <br /><i class="bi bi-buildings-fill"></i> @userCompany?.Name</div>
+                <div class="card-body">
+
+                    @if (userCompanyProduct != null)
+                    {
+                        <h5 class="text-decoration-line-through pt-2">@userCompanyProduct?.ListPrice.ToString("c")</h5>
+                        <h4 class="text-warning">@userCompanyProduct?.Price.ToString("c")</h4>
+                        <a asp-area="company" asp-controller="product" asp-action="upsert" asp-route-id="@Model.ProductId" class="card-link w-100 mt-2">Update Listing</a>
+                    }
+                    else
+                    {
+                        <a asp-area="company" asp-controller="product" asp-action="upsert" asp-route-id="@Model.ProductId" class="card-link w-100 mt-2">Make Listing</a>
+                    }
+                </div>
+            </div>
+        }
         @if (ViewBag.SelectedCompanyProduct != null)
         {
-            int companyId = ViewBag.SelectedCompanyProduct.CompanyId;
-            var selectedCompany = Model.Companies.FirstOrDefault(r => r.Id == companyId);
-            <div class="card bg-secondary mb-3 mt-5" style="max-width: 20rem;">
+            Company selectedCompany = ViewBag.SelectedCompanyProduct.Company;
+            <div class="card border-info bg-secondary mb-3 mt-5" style="max-width: 20rem;">
                 <div class="card-header">Seller</div>
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-shop"></i> @selectedCompany.Name</h5>
+                    <h5 class="card-title"><i class="bi bi-shop"></i> @selectedCompany?.Name</h5>
                 </div>
             </div>
 
             <div class="card bg-secondary mt-5" style="max-width: 20rem;">
                 <div class="card-header">Other Sellers</div>
                 <ul class="list-group list-group-flush">
-                    @foreach (var company in Model.Companies)
+                    @foreach (var companyProduct in Model.Product.CompanyProducts.Where(c => c.CompanyId != selectedCompany?.Id).Take(2))
                     {
-                        if(company.Id == companyId)
-                        {
-                            continue;
-                        }
-                        <li class="list-group-item"><a style="text-decoration:none" asp-action="details" asp-route-id="@Model.Id" asp-route-companyId="@company.Id"><i class="bi bi-shop"></i> @company.Name <br /> @Model.CompanyProducts.FirstOrDefault(cp => cp.CompanyId == company.Id)?.Price.ToString("c")</a> </li>
+                        <li class="list-group-item">
+                            <a style="text-decoration:none" asp-action="details" asp-route-id="@Model.Product.Id" asp-route-companyId="@companyProduct?.Company.Id">
+                                <i class="bi bi-shop"></i>
+                                @companyProduct?.Company.Name
+                                <h6 class="text-decoration-line-through pt-2">@companyProduct?.ListPrice.ToString("c")</h6>
+                                <h5 class="text-warning">@companyProduct?.Price.ToString("c")</h5>
+                            </a>
+                        </li>
                     }
+                    <li class="list-group-item">
+                        <button class="list-group-item w-100" type="button" onClick="document.getElementById('AllCompanies').scrollIntoView();">Show All</button>
+                    </li>
                 </ul>
             </div>
         }

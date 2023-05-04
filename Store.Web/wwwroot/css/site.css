@@ -20,3 +20,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.no-spinners {
+    -webkit-appearance: none;
+    margin: 0;
+}

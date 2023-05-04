@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
+using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Store.Web.Areas.Customer.Controllers
 {
@@ -21,18 +24,49 @@ namespace Store.Web.Areas.Customer.Controllers
         {
             var productList = await unitOfWork.Product.GetAll(includeProperties: "CompanyProducts");
             return View(productList);
-        }        
+        }
         public async Task<IActionResult> Details(int? id, int? companyId)
         {
-            var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id,includeProperties: "Category,CompanyProducts,Companies");
+            var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id, includeProperties: "Category,CompanyProducts,Companies");
             if (product == null)
                 return RedirectToAction("Index");
-            
-            ViewBag.SelectedCompanyProduct = product.CompanyProducts.FirstOrDefault(r => r.CompanyId == companyId);
-            if(ViewBag.SelectedCompanyProduct == null)
-                product.CompanyProducts.MinBy(r => r.Price);
 
-            return View(product);
+            var selectedCompany = product.CompanyProducts.FirstOrDefault(r => r.CompanyId == companyId) ?? product.CompanyProducts.MinBy(r => r.Price);
+
+            ShoppingCart model = new ShoppingCart
+            {
+                ProductId = product.Id,
+                Product = product,
+                CompanyId = selectedCompany?.CompanyId ?? 0,
+                Company = selectedCompany?.Company,
+                Count = 1
+            };
+
+            ViewBag.SelectedCompanyProduct = selectedCompany;
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Details(ShoppingCart shoppingCart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            var cartFromDb = await unitOfWork.ShoppingCart.GetFirstOrDefault(r => r.ApplicationUserId == shoppingCart.ApplicationUserId && r.ProductId == shoppingCart.ProductId && r.CompanyId == shoppingCart.CompanyId);
+            if (cartFromDb != null)
+            {
+                cartFromDb.Count += shoppingCart.Count;
+                unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+            await unitOfWork.SaveAsync();
+            TempData["success"] = "Cart updated successfully";
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()

@@ -12,7 +12,8 @@ namespace Store.DataAccess.RepositoryContracts
         IProductRepository Product { get; }
         ICompanyRepository Company { get; }
         ICompanyProductRepository CompanyProduct { get; }
-
+        IShoppingCartRepository ShoppingCart { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         Task SaveAsync();
 
     }
