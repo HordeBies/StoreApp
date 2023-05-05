@@ -23,6 +23,10 @@ namespace Store.Models
 
         public int Count { get; set; }
         public double Price { get; set; }
+        public DateTime? ShippingDate { get; set; }
+        public string? TrackingNumber { get; set; }
+        public string? Carrier { get; set; }
+
         #region Navigation Properties
         [ForeignKey(nameof(OrderHeaderId))]
         [ValidateNever]

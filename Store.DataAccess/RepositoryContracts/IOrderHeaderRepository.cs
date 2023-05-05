@@ -1,4 +1,5 @@
 ﻿using Store.Models;
+using System.Linq.Expressions;
 
 namespace Store.DataAccess.RepositoryContracts
 {

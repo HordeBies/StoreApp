@@ -1,0 +1,51 @@
+﻿@{
+    var status = Context.Request.Query["status"];
+    var selected = "active text-white bg-dark";
+    var unselected = "text-dark";
+}
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-dark bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white pt-2">Product List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between pb-5 pt-2">
+            <span></span>
+            <ul class="list-group list-group-horizontal">
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="All">
+                <li class="list-group-item @(status == "All"? selected : unselected)">
+                    All
+                </li>
+                </a>
+                @foreach (var orderStatus in OrderStatus.Collection)
+                {
+                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="@orderStatus">
+                    <li class="list-group-item @(status == orderStatus? selected : unselected)">
+                            @orderStatus
+                    </li>
+                    </a>
+                }
+            </ul>
+        </div>
+        <table id="tblData" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/admin/order.js"></script>
+}
