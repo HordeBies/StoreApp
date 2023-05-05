@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
+using Store.Utility;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -65,6 +66,7 @@ namespace Store.Web.Areas.Customer.Controllers
                 unitOfWork.ShoppingCart.Add(shoppingCart);
             }
             await unitOfWork.SaveAsync();
+            HttpContext.Session.SetInt32(SessionSD.ShoppingCart, (await unitOfWork.ShoppingCart.GetAll(r => r.ApplicationUserId == shoppingCart.ApplicationUserId)).Count());
             TempData["success"] = "Cart updated successfully";
             return RedirectToAction(nameof(Index));
         }

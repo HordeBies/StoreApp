@@ -14,7 +14,26 @@
             </div>
         </div>
     </div>
-    <div class="card-body p-4">
+    <div class="col-md-12 col-md-offset-2 pt-4 mx-4">
+        <section>
+            <h3>Use another service to register.</h3>
+            <hr />
+            @{
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model?.ExternalLogins!)
+                            {
+                                <button type="submit" class="btn btn-outline-info" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            }
+        </section>
+    </div>
+    <hr class="mt-4 pt-4 mb-0 pb-0" />
+    <div class="card-body p-4 pt-1">
         <div class="row">
             <div class="col-md-12">
                 <form id="registerForm" class="row" asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -47,7 +66,7 @@
                     </div>
                     <div class="form-floating mb-3 col-md-6">
                         <input asp-for="Input.StreetAddress" class="form-control" aria-required="true" placeholder="Example Street" />
-                        <label asp-for="Input.StreetAddress" class="ms-2 text-muted">Street Address</label>
+                        <label asp-for="Input.StreetAddress" class="ms-2 text-muted">Address</label>
                         <span asp-validation-for="Input.StreetAddress" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
@@ -76,38 +95,6 @@
                         <button id="registerSubmit" type="submit" class="w-75 btn btn-lg btn-primary ">Register</button>
                     </div>
                 </form>
-            </div>
-            <div class="col-md-12 col-md-offset-2 pt-4 m-4">
-                <section>
-                    <h3>Use another service to register.</h3>
-                    <hr />
-                    @{
-                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                        {
-                            <div>
-                                <p>
-                                    There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                        article
-                                        about setting up this ASP.NET application to support logging in via external services
-                                    </a>.
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                                <div>
-                                    <p>
-                                        @foreach (var provider in Model.ExternalLogins!)
-                                        {
-                                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                        }
-                                    </p>
-                                </div>
-                            </form>
-                        }
-                    }
-                </section>
             </div>
         </div>
     </div>

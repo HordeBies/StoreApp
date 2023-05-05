@@ -165,6 +165,8 @@ namespace Store.Web.Areas.Customer.Controllers
 
                 var shoppingCarts = await unitOfWork.ShoppingCart.GetAll(r => r.ApplicationUserId == orderHeader.ApplicationUserId);
                 unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                HttpContext.Session.Remove(SessionSD.ShoppingCart);
+
                 await unitOfWork.SaveAsync();
 
                 return View(id);
@@ -177,6 +179,7 @@ namespace Store.Web.Areas.Customer.Controllers
             var cartFromDb = await unitOfWork.ShoppingCart.GetFirstOrDefault(r => r.Id == cartId);
             unitOfWork.ShoppingCart.Remove(cartFromDb);
             await unitOfWork.SaveAsync();
+            HttpContext.Session.SetInt32(SessionSD.ShoppingCart, (await unitOfWork.ShoppingCart.GetAll(r => r.ApplicationUserId == cartFromDb.ApplicationUserId)).Count());
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Plus(int cartId)
@@ -200,6 +203,7 @@ namespace Store.Web.Areas.Customer.Controllers
                 unitOfWork.ShoppingCart.Update(cartFromDb);
             }
             await unitOfWork.SaveAsync();
+            HttpContext.Session.SetInt32(SessionSD.ShoppingCart, (await unitOfWork.ShoppingCart.GetAll(r => r.ApplicationUserId == cartFromDb.ApplicationUserId)).Count());
             return RedirectToAction(nameof(Index));
         }
     }

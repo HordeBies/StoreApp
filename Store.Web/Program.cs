@@ -35,6 +35,26 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
 
+var gitHubOptions = builder.Configuration.GetSection("Authentication:GitHub").Get<ExternalAuthenticationSettings>();
+var googleOptions = builder.Configuration.GetSection("Authentication:Google").Get<ExternalAuthenticationSettings>();
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = googleOptions.ClientId;
+    options.ClientSecret = googleOptions.ClientSecret;
+}).AddGitHub(options =>
+{
+    options.ClientId = gitHubOptions.ClientId;
+    options.ClientSecret = gitHubOptions.ClientSecret;
+});
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,7 +71,7 @@ StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey"
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",

@@ -56,7 +56,7 @@ namespace Store.Web.Areas.Admin.Controllers
 
             if (model == null)
                 return NotFound();
-            return View("Order/Details", model);
+            return View(model);
         }
         [HttpPost]
         [Authorize(Roles = Role.Admin + "," + Role.Company)]
