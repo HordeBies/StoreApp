@@ -25,11 +25,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if(builder.Environment.IsProduction())
-{
-    var connectionName = builder.Configuration["AzureConnectionName"];
-    connectionString = builder.Configuration[connectionName];
-}
+//if(builder.Environment.IsProduction())
+//{
+connectionString = connectionString.Replace("{password}", builder.Configuration["AzureDbPassword"]);
+//}
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)
 );
