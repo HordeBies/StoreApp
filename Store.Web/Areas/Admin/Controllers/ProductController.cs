@@ -91,27 +91,6 @@ namespace Store.Web.Areas.Admin.Controllers
             return View(product);
         }
 
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null || id == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id);
-        //    return View(product);
-        //}
-        //[HttpPost, ActionName("Delete")]
-        //public async Task<IActionResult> DeletePOST(int? id)
-        //{
-        //    var product = await unitOfWork.Product.GetFirstOrDefault(r => r.Id == id);
-        //    if (product == null)
-        //        return NotFound();
-        //    unitOfWork.Product.Remove(product);
-        //    await unitOfWork.SaveAsync();
-        //    TempData["success"] = "Product deleted successfully";
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         #region API Calls
         [HttpGet]
         public async Task<IActionResult> GetAll()

@@ -126,23 +126,6 @@ namespace Store.Web.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            // Can use sql to populate roles
-            if(!await _roleManager.RoleExistsAsync(Role.Customer))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(Role.Customer));
-            }
-            if(!await _roleManager.RoleExistsAsync(Role.Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(Role.Admin));
-            }
-            if(!await _roleManager.RoleExistsAsync(Role.Company))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(Role.Company));
-            }
-            if(!await _roleManager.RoleExistsAsync(Role.Affiliate))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(Role.Affiliate));
-            }
 
             Input = new()
             {
@@ -206,7 +189,14 @@ namespace Store.Web.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(Role.Admin))
+                        {
+                            TempData["success"] = "New user created successfully.";
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }

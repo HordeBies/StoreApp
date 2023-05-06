@@ -247,7 +247,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -296,7 +296,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
 
                     b.HasData(
                         new
@@ -346,7 +346,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CompanyProducts");
+                    b.ToTable("CompanyProducts", (string)null);
 
                     b.HasData(
                         new
@@ -454,7 +454,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Store.Models.OrderHeader", b =>
@@ -514,7 +514,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("OrderHeaders");
+                    b.ToTable("OrderHeaders", (string)null);
                 });
 
             modelBuilder.Entity("Store.Models.Product", b =>
@@ -556,7 +556,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -650,7 +650,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasIndex("CompanyId", "ProductId");
 
-                    b.ToTable("ShoppingCarts");
+                    b.ToTable("ShoppingCarts", (string)null);
                 });
 
             modelBuilder.Entity("Store.Models.ApplicationUser", b =>

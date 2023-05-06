@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
 using Store.Utility;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Security.Claims;
 

@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.IdentityModel.Tokens;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
 using Store.Utility;
-using Store.Web.Areas.Admin.Models;
 
 namespace Store.Web.Areas.Company.Controllers
 {

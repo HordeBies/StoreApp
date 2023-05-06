@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using Store.DataAccess.Repositories;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
 using Store.Utility;
 using Store.Web.Models;
 using Stripe;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace Store.Web.Areas.Admin.Controllers
@@ -46,7 +42,7 @@ namespace Store.Web.Areas.Admin.Controllers
             else
                 model.OrderDetails = allOrderDetails;
 
-            var selectedOrder = model.OrderDetails.FirstOrDefault(r => r.Id == orderDetailId);
+            var selectedOrder = User.IsInRole(Role.Company) ? model.OrderDetails.FirstOrDefault() : model.OrderDetails.FirstOrDefault(r => r.Id == orderDetailId);
             if (selectedOrder != null)
             {
                 model.ShippingDate = selectedOrder.ShippingDate;

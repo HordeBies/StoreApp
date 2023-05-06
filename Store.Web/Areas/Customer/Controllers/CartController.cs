@@ -1,25 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Store.DataAccess.RepositoryContracts;
 using Store.Models;
 using Store.Utility;
 using Store.Web.Areas.Customer.Models;
 using Stripe.Checkout;
-using Stripe;
 using System.Security.Claims;
 
 namespace Store.Web.Areas.Customer.Controllers
 {
     [Area("Customer")]
-    [Authorize]
+    [Authorize(Roles = Role.Customer)]
     public class CartController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IEmailSender emailSender;
         [BindProperty]
         public ShoppingCartVM viewModel { get; set; }
-        public CartController(IUnitOfWork unitOfWork)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
         {
             this.unitOfWork = unitOfWork;
+            this.emailSender = emailSender;
         }
 
         public async Task<IActionResult> Index()
@@ -150,7 +152,7 @@ namespace Store.Web.Areas.Customer.Controllers
 
         public async Task<IActionResult> OrderConfirmation(int id)
         {
-            OrderHeader orderHeader = await unitOfWork.OrderHeader.GetFirstOrDefault(r => r.Id == id);
+            OrderHeader orderHeader = await unitOfWork.OrderHeader.GetFirstOrDefault(r => r.Id == id, includeProperties:"ApplicationUser");
             if (orderHeader.PaymentStatus == PaymentStatus.Approved)
             {
                 return View(id);
@@ -168,6 +170,8 @@ namespace Store.Web.Areas.Customer.Controllers
                 HttpContext.Session.Remove(SessionSD.ShoppingCart);
 
                 await unitOfWork.SaveAsync();
+
+                await emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email,"New Order - Bies Book", $"<p>New Order Created - {orderHeader.Id}</p>");
 
                 return View(id);
             }

@@ -2,7 +2,7 @@
 @using Store.Utility;
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = User.IsInRole(Role.Admin) ? "Register - ADMIN PORTAL" : "Register";
 }
 
 
@@ -14,25 +14,28 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 col-md-offset-2 pt-4 mx-4">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
-                        <p>
-                            @foreach (var provider in Model?.ExternalLogins!)
-                            {
-                                <button type="submit" class="btn btn-outline-info" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                            }
-                        </p>
-                    </div>
-                </form>
-            }
-        </section>
-    </div>
-    <hr class="mt-4 pt-4 mb-0 pb-0" />
+    @if (!User.IsInRole(Role.Admin))
+    {
+        <div class="col-md-12 col-md-offset-2 pt-4 mx-4">
+            <section>
+                <h3>Use another service to register.</h3>
+                <hr />
+                @{
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model?.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-outline-info" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            </section>
+        </div>
+    }
+        <hr class="mt-4 pt-4 mb-0 pb-0" />
     <div class="card-body p-4 pt-1">
         <div class="row">
             <div class="col-md-12">
@@ -79,18 +82,21 @@
                         <label asp-for="Input.PhoneNumber" class="ms-2 text-muted">Phone Number</label>
                         <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
-                    <div class="form-floating mb-3 col-md-6">
-                        <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
-                            <option disabled selected>Select Role</option>
-                        </select>
-                        <label asp-for="Input.Role" class="ms-2 text-muted">Role</label>
-                    </div>
-                    <div class="form-floating mb-3 col-md-6" id="Input_Company" style="display:none;">
-                        <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
-                            <option disabled selected>Select Company</option>
-                        </select>
-                        <label asp-for="Input.CompanyId" class="ms-2 text-muted">Company</label>
-                    </div>
+                    @if (User.IsInRole(Role.Admin))
+                    {
+                        <div class="form-floating mb-3 col-md-6">
+                            <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
+                                <option disabled selected>Select Role</option>
+                            </select>
+                            <label asp-for="Input.Role" class="ms-2 text-muted">Role</label>
+                        </div>
+                        <div class="form-floating mb-3 col-md-6" id="Input_Company" style="display:none;">
+                            <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
+                                <option disabled selected>Select Company</option>
+                            </select>
+                            <label asp-for="Input.CompanyId" class="ms-2 text-muted">Company</label>
+                        </div>
+                    }
                     <div class="col-12 text-center">
                         <button id="registerSubmit" type="submit" class="w-75 btn btn-lg btn-primary ">Register</button>
                     </div>
@@ -103,14 +109,17 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        $(document).ready(function () {
-            $("#Input_Role").change(function () {
-                if ($("#Input_Role").val() == "@Role.Company")
-                    $("#Input_Company").show();
-                else
-                    $("#Input_Company").hide();
+    @if (User.IsInRole(Role.Admin))
+    {
+        <script>
+            $(document).ready(function () {
+                $("#Input_Role").change(function () {
+                    if ($("#Input_Role").val() == "@Role.Company")
+                        $("#Input_Company").show();
+                    else
+                        $("#Input_Company").hide();
+                });
             });
-        });
-    </script>
+        </script>
+    }
 }
