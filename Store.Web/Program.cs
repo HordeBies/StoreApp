@@ -24,8 +24,14 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if(builder.Environment.IsProduction())
+{
+    var connectionName = builder.Configuration["AzureConnectionName"];
+    connectionString = builder.Configuration[connectionName];
+}
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseSqlServer(connectionString)
 );
 
 builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders().AddDefaultUI();
