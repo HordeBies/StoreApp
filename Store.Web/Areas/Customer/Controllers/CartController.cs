@@ -112,8 +112,7 @@ namespace Store.Web.Areas.Customer.Controllers
                 await unitOfWork.SaveAsync();
             }
 
-            // TODO: Handle dynamic url creation
-            var domain = "https://localhost:7140";
+            var domain = Request.Scheme+"://"+ Request.Host.Value;
             var options = new SessionCreateOptions
             {
                 SuccessUrl = $"{domain}/customer/cart/OrderConfirmation?id={viewModel.OrderHeader.Id}",
